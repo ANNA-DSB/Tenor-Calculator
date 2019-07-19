@@ -1,0 +1,17 @@
+{
+  "name": "dsb-tenor-calculator",
+  "version": "0.0.1",
+  "description": "Javascript implementation of the DSB Tenor Calculator",
+  "scripts": {},
+  "author": "ANNA-DSB",
+  "private": true,
+  "copyright": "Copyright © 2019 The Derivatives Service Bureau Ltd.  Licensed under the Apache License, Version 2.0 (the \"License\"); you may not use this file except in compliance with the License. You may obtain a copy of the License at      http://www.apache.org/licenses/LICENSE-2.0  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.",
+  "dependencies": {},
+  "devDependencies": {
+    "@babel/cli": "7.2.3",
+    "@babel/core": "7.2.2",
+    "@babel/preset-env": "7.3.1",
+    "babel-preset-minify": "0.5.0",
+    "browserify": "16.2.3"
+  }
+}

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<head>
+  <!--
+    Copyright @ 2019 The Derivatives Service Bureau Ltd.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+  -->
+  <meta charset="utf-8">
+  <title>DSB Tenor Calculator</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+    integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+  <link rel="stylesheet" href="./lib/bootstrap-datepicker/css/bootstrap-datepicker.min.css">
+  <style>
+    body {
+      background: #ffffff;
+    }
+
+    .box-shadow {
+      box-shadow: 0 5px 5px -3px rgba(0, 0, 0, .1), 0 8px 10px 1px rgba(0, 0, 0, .1), 0 3px 14px 2px rgba(0, 0, 0, .1);
+    }
+
+    .results label {
+      color: black !important;
+    }
+
+    .main-nav {
+      background: #4fafd1;
+      color: white;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="col-md-12"><img src="./img/anna-logo.png" class="mt-2 mb-2"></div>
+  </div>
+  <nav class="pt-2 pb-2 main-nav">
+    <div class="container">
+      <h5 class="col-md-12">Term of Contract Calculator</h5>
+    </div>
+  </nav>
+  <div class="container">
+
+    <div class="m-3 form-container">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="row">
+            <div class="col-md-6 pr-5">
+              <h5 class="border-bottom border-dark pb-2 pl-2">Input Parameters</h5>
+              <form id="inputForm" class="needs-validation mt-4" novalidate="">
+                <div class="form-group row">
+                  <label for="effectiveDate" class="col-form-label col-sm-6 text-right">Effective Date</label>
+                  <div class="col-sm-6">
+                    <!-- <input type="date" class="form-control" id="effectiveDate" placeholder="YYYY-MM-DD" value=""
+                      required=""> -->
+                    <input type="text" class="form-control" id="effectiveDate" value="" placeholder="YYYY/MM/DD" required=""><span
+                      class="input-group-addon"><i class="far fa-calendar-alt"></i></span>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="expiryDate" class="col-form-label col-sm-6 text-right">Expiry Date</label>
+                  <div class="col-sm-6">
+                    <input type="text" class="form-control" id="expiryDate" value="" placeholder="YYYY/MM/DD" required=""><span
+                      class="input-group-addon"><i class="far fa-calendar-alt"></i></span>
+                  </div>
+                </div>
+                <fieldset class="form-group">
+                  <div class="row">
+                    <legend class="col-form-label col-sm-6 text-right">Adjusted Expiry Date</legend>
+                    <div class="col-sm-6 pt-2">
+
+                      <div class="form-check-inline">
+                        <input class="form-check-input" type="radio" name="adjustedExpiry" id="adjustedExpiryNo" value="No" checked="">
+                        <label class="form-check-label" for="adjustedExpiryNo">No</label>
+                      </div>
+                      <div class="form-check-inline">
+                        <input class="form-check-input" type="radio" name="adjustedExpiry" id="adjustedExpiryYes">
+                        <label class="form-check-label" for="adjustedExpiryYes">Yes</label>
+                      </div>
+                    </div>
+                  </div>
+                </fieldset>
+                <div class="form-group row">
+                  <label for="calculationMethod" class="col-form-label col-sm-6 text-right">Calculation Method</label>
+                  <div class="col-sm-6">
+                    <input type="text" class="form-control" id="calculationMethod" value="ESMA" placeholder="Calculation Method" required="">
+                  </div>
+                </div>
+              </form>
+              <div class="row">
+                <div class="col-md-3 offset-md-6 text-left">
+                  <button type="button" class="btn btn-secondary" onclick="window.resetForm()">Reset</button>
+                </div>
+                <div class="col-md-3 text-right">
+                  <button type="button" class="btn btn-primary" onclick="window.calculateTenor()">Calculate</button>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 pl-5">
+              <h5 class="border-bottom border-dark pb-2 pl-2">Calculation Results</h5>
+              <form id="resultForm" class="needs-validation mt-4" novalidate="">
+                <div class="form-group row">
+                  <label for="tenorValue" class="col-form-label col-sm-6 text-right">Term of Contract Value</label>
+                  <div class="col-sm-6">
+                    <input type="text" class="form-control-plaintext border pl-3" id="tenorValue" placeholder=""
+                      value="" required="" readonly="">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="tenorUnit" class="col-form-label col-sm-6 text-right">Term of Contract Unit</label>
+                  <div class="col-sm-6">
+                    <input type="text" readonly="" class="form-control-plaintext border pl-3" id="tenorUnit"
+                      placeholder="" value="" required="">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="tenorBasis" class="col-form-label col-sm-6 text-right">Calculation Basis</label>
+                  <div class="col-sm-6">
+                    <input type="text" readonly="" class="form-control-plaintext border pl-3" id="tenorBasis"
+                      placeholder="" value="" required="">
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12 text-right text-danger" id="errorMsg"></div>
+                </div>
+              </form>
+            </div>
+            <div class="col-md-6 pr-5">
+              <h5 class="border-bottom border-dark pb-2 pl-2">Links:</h5>
+              <div class="pl-2">
+                <a href="https://www.esma.europa.eu/sites/default/files/library/esma70-1861941480-56_qas_mifir_data_reporting.pdf"
+                  target="_blank">
+                  ESMA Reference Data FAQ</a><br>
+                <a href="https://www.anna-dsb.com/download/dsb-term-of-contract-faq/" target="_blank">DSB Term of
+                  Contract FAQ
+                </a>
+              </div>
+            </div>
+            <div class="col-md-6 pl-5">
+              <h5 class="border-bottom border-dark pb-2 pl-2">Disclaimer:</h5>
+              <p class="font-italic" style="font-size: 9pt;">
+                The method employed to produce the result is based on the method defined in the ESMA FAQ but includes
+                assumptions that are summarised in the DSB FAQ document. </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+    integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+    integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+    integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+    crossorigin="anonymous"></script>
+  <script src="https://momentjs.com/downloads/moment.min.js"></script>
+  <script src="./lib/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+  <script src="tenor-calculator.min.js"></script>
+  <script src="test.js"></script>
+</body>
